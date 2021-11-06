@@ -1,0 +1,21 @@
+%- 4 classes 
+% 	- 2 classes with 4 or more data members
+ - 1 class must include array of shit from another class
+%- Getters and setters
+%- 6 if/else statements
+ - 4 while loops
+ - 4 for loops
+ - 2 nested loops
+%- 7 variables
+ - 1 reading from file
+ - 1 writing to a file
+%- interactive
+ - display stats at each turn
+ - 2D map
+ - 5 menu options
+	- 2 of which need to have a second layer
+ 	- 2 of which need a random component
+
+***********************************************OTHER NOTES********************************************** - MUST COMPILE AND RUN (send to Parker and see if he can get it to run?)
+ - Test each and every case and try to break
+ - Present in class for extra credit

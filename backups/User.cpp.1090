@@ -1,0 +1,51 @@
+User::User()
+{
+	name = "";
+	room = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		item[i] = 0;
+	}
+}
+
+User::User(string name_, int room_, int item_)
+{
+	name = name_;
+	room = room_;
+	for (int i = 0; i < 4; i++)
+        {                                                                                                                               item[i] = item_[i];
+        }
+}
+
+void User::setName(string name_)
+{
+	name = name_;
+}
+
+void User::setRoom(int)
+{
+	room = room_;
+}
+
+void User::setItem(int)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		item[i] = item_[i];
+	}
+}
+
+string User::getName()
+{
+	return name;
+}
+
+int User::getRoom()
+{
+	return room;
+}
+
+int User::getItem(int i)
+{
+	return item[i];
+}

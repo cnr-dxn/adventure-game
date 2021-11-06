@@ -1,0 +1,2 @@
+2,knife,0
+3,musket,0

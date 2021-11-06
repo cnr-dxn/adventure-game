@@ -1,0 +1,4 @@
+ - Use currentRoom established earlier, set it 
+ - If currentroom is greater than xrooms, say this
+ - else if it is this and this, do this 
+ - else if.......

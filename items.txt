@@ -1,0 +1,10 @@
+0,key,1
+1,flashlight,0
+2,knife,0
+3,musket,0
+4,battery,0
+5,bat,0
+6,pen,0
+7,wad of cash,0
+8,rubber duckie,0
+

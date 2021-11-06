@@ -1,0 +1,40 @@
+#ifndef ITEM_H
+#define ITEM_H
+
+#include "Door.h"
+#include "User.h"
+#include "Room.h"
+#include <iostream>
+#include <vector> 
+#include <iomanip>
+#include <math.h>
+#include <string>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+class Item
+{
+        public:
+      	Item();
+        Item(int, string, bool, bool);
+
+        void setItemID(int);
+	void setNameOfItem(string);
+        void setIfItemIsNeeded(bool);
+        void setIfItemIsHeld(bool);
+	
+	int getItemID();
+        string getNameOfItem();
+        bool getIfItemIsNeeded();
+        bool getIfItemIsHeld();
+
+        private:
+        int itemID;
+	string nameOfItem;
+	bool ifItemIsNeeded;
+	bool ifItemIsHeld;
+};
+
+#endif

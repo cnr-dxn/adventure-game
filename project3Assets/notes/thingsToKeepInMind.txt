@@ -1,0 +1,18 @@
+ Things to figure out how to do:
+ - setting entries of arrays equal to eachother
+ - returning single aspects of an array
+ - syntax in including everything
+ - (Room.h) how to clear a vector DONT NEED TO WE LEARNED THIS ALREADY IS ALREADY CLEARED FOR SOME REASON
+ - how to establish a vector as an argument
+ - rethink item as an integer, array or vector
+
+*****************************************************
+ Things to do:
+ - Syntax for everything
+
+*****************************************************
+ Questions to ask Dad:
+ - Thing about establishing doorways & item
+ - For getters, ask for identity of room?
+
+*****************************************************

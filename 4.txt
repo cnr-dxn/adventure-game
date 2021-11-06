@@ -1,0 +1,2 @@
+8,rubber duckie,1
+9,crowbar,0

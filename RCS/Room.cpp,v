@@ -1,0 +1,95 @@
+head	1.2;
+access;
+symbols;
+locks
+	cdixon1:1.2; strict;
+comment	@// @;
+
+
+1.2
+date	2019.11.10.05.20.36;	author cdixon1;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2019.11.10.05.17.23;	author cdixon1;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@Room::Room()
+{
+	// clear the doorways vector;
+	// clear the item vector;  xxx
+	ifVisited = false;
+	ifSolved = false;
+}
+
+Room::Room(vector<Doorway> doorways_, vector<Item> item_, bool ifVisited_, bool ifSolved_)
+{
+	doorways = doorways_;
+	item = item_;
+	ifVisited = ifVisited_;
+	ifSolved = ifSolved_;
+}
+
+void Room::setDoorways(?????????????????)
+{
+	//????????????????
+}
+
+void Room::setItem(?????????????????)
+{
+        //????????????????
+}
+
+void Room::setIfVisited(bool ifVisited_)
+{
+	ifVisited = ifVisited_;
+}
+
+void Room::setIfSolved(bool ifSolved_)
+{
+	ifSolved = ifSolved_;
+}
+
+Doorway Room::getDoorways()
+{
+	return doorways;
+}
+
+Item Room::getItem()
+{
+	return item;
+}
+
+bool Room::getIfVisited()
+{
+	return ifVisited;
+}
+
+bool Room::getIfSolved()
+{
+	return ifSolved;
+} 
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d4 1
+a4 1
+	// clear the item vector;
+@

@@ -1,0 +1,58 @@
+user
+ - Data members:
+ 	- Location
+ 	- Vector of items held
+ 	- Name
+ - Functions:
+	- Default Constructor 
+        - Paramaterized Constructor
+        - Setters for each (straightforward), getters for each (straightforward)
+
+room 
+ - Data members:
+	- vector of items per room
+        - bool: if the user has visited
+        - bool: if the user has solved puzzle should there be one
+        - int: x Location of room
+        - int: y Location of room
+        - int: west Door
+        - int: east Door
+        - int: north Door
+        - int: south Door
+ - Functions:
+	- Default Constructor                                                                                   - Paramaterized Constructor 
+        - Setters for each (straightforward), getters for each (straightforward)
+		- Set item vector involves taking initialized vector and setting 
+                  values to sections in the array
+item
+ - Data members:
+	- string: name Of Item
+        - bool: if Item Is Held
+        - bool: if Item Is Needed
+ - Functions: 
+        - Default Constructor
+        - Paramaterized Constructor
+        - Setters for each (straightforward), getters for each (straightforward)
+		 - Set item vector involves taking initialized vector and setting                                          values to sections in the array
+		 - Reading in certain values from external file
+door
+ - Data members:
+	- int: orientation (east-west or north-south)
+        - int: what room is west of
+        - int: what room is east of
+        - int: what room is north of
+        - int: what room is south of
+ - Functions:
+	- Setters for each (straightforward), getters for each (straightforward)
+map 
+ - Data members:
+	- int: 
+ - 
+puzzle 
+ - 
+possibly inventory
+
+*********************************
+- Create narrative that talks user through situation in each room
+- Loops (if user has to complete task to enter next room)
+

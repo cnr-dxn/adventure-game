@@ -1,0 +1,2 @@
+0,rusty lock pick,0
+1,flashlight,0

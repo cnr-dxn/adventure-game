@@ -1,0 +1,8 @@
+while :
+do   
+   ./gen_random_input.pl | 
+   ./game | 
+   tee -a output | 
+   'egrep' -e 'Congrat|moves' 
+   echo $?
+done

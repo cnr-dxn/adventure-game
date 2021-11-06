@@ -1,0 +1,12 @@
+==========IMPORTANT DIRECTIONS TO OPEN/COMPILE/RUN PROGRAM===========
+
+ - In order to consolodate space & make my coding more efficient, 
+   a "Makefile" file was created. This file created object files for 
+   compiling all the headers, cpp files and the main game program. That
+   way, all i needed to do to compile was type the command "make" and it
+   would run all the desired commands at once.
+
+ - The executible for this is './game'; after compiling everything using 
+   the makefile, enter './game' to run the program
+
+ - 

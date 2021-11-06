@@ -1,0 +1,2 @@
+14,shoe,0
+15,paper clip,0

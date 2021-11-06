@@ -1,0 +1,55 @@
+Room::Room()
+{
+	// clear the doorways vector;
+	// clear the item vector;  
+	ifVisited = false;
+	ifSolved = false;
+}
+
+Room::Room(vector<Doorway> doorways_, vector<Item> item_, bool ifVisited_, bool ifSolved_)
+{
+	doorways = doorways_;
+	item = item_;
+	ifVisited = ifVisited_;
+	ifSolved = ifSolved_;
+}
+
+void Room::setDoorways(?????????????????)
+{
+	//????????????????
+}
+
+void Room::setItem(?????????????????)
+{
+        //????????????????
+}
+
+void Room::setIfVisited(bool ifVisited_)
+{
+	ifVisited = ifVisited_;
+}
+
+void Room::setIfSolved(bool ifSolved_)
+{
+	ifSolved = ifSolved_;
+}
+
+Doorway Room::getDoorways()
+{
+	return doorways;
+}
+
+Item Room::getItem()
+{
+	return item;
+}
+
+bool Room::getIfVisited()
+{
+	return ifVisited;
+}
+
+bool Room::getIfSolved()
+{
+	return ifSolved;
+} 

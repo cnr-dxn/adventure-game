@@ -1,0 +1,19 @@
+- classes for each element 
+  - functions inside determine aspects about room
+  - non-boolean 
+    - different doors in each room 
+- Each object is a "flag" to achieve
+- Rooms, user, object, door
+- 20% chance if they can open the door 
+- Random:
+	- one results in random provavility
+	- variable assinged random number 
+- Make current room an almost global variable so it can be used in both concept map thingy and move user function
+- One room teleports you to another room?
+- Start with dice 
+
+
+week 1: all classes defined, rooms established, able to move user
+week 2: items placed, interact with items 
+week 3: doors operational, coordinate to exit the room
+week 4: make cool, check all critera met

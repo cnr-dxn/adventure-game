@@ -1,0 +1,40 @@
+main:
+ - set user name 
+ - set location as 0;
+ - Loop:
+ 	- call decision function 
+        - end ideration of loop
+ - 
+ 
+decision function:
+ - display main choices
+ - if choice has sub-choices, call sub choice function
+ 
+move function (int room they're now in)
+ - for dirction in N S E W 
+   - print choice if door exsts on that wall
+ - take in choice, then use choice to move user
+ - return the room the user is now in  
+
+look around function
+
+pickup/exchange ojbect fuction
+ - 
+
+
+decision tree:
+ - exchange/pick up object
+ - move
+   - move north
+   - move south
+   - move east
+   - move west
+ - look around
+
+
+set everything to -1 at beginning
+
+
+
+notes:
+go where a door is 

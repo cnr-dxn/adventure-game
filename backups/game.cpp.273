@@ -1,0 +1,838 @@
+#include "User.h"
+#include "Room.h"
+#include "Item.h"
+#include "Door.h"
+
+#include <iostream>
+#include <iomanip>
+#include <math.h>
+#include <vector> 
+#include <string>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+ 
+#define EW 0
+#define NS 1
+#define CLOSED 0
+#define OPEN 1
+#define OUTSIDE 999
+#define X_ROOMS 3
+#define Y_ROOMS 3
+#define TOTAL_ROOMS 9
+#define EXIT_ROOM 7
+#define MAX_DOORS 81
+#define RANDOM_NUMBER 3
+
+using namespace std;
+// Function for looking around the room *****************************************************************************
+
+/*
+* Algorithm: display characteristics of the room the user is currently located
+* Steps: 
+	1. Print "here are the attributes of your room:
+	2. If a door exists, print "there is a door on the ___ side" (whichever side it exists)
+	3. Print the items in the room
+	4. Print the item the user has 
+* Input parameters: The user object, the array of rooms, the array of doors 
+* Output (prints to screen): The above statements 
+* Returns: Nothing 
+*/
+    
+void lookAround(User &user, Room rooms[], Door doors[])
+{
+	cout << "******************************************************************" << endl;
+	cout << "Here are the current attributes of your location: " << endl;
+        cout << "You're currently in room " << user.getLocation() << "." << endl;
+	cout << endl;
+
+	if (rooms[user.getLocation()].getNorthDoor() != -1)
+	{
+		  cout << "There is a door on the north side in which you can move through." << endl;
+	}
+	
+	if (rooms[user.getLocation()].getSouthDoor() != -1)
+	{
+		  cout << "There is a door on the south side in which you can move through." << endl;
+	}
+	
+	if (rooms[user.getLocation()].getWestDoor() != -1)
+	{
+		  cout << "There is a door on the west side in which you can move through." << endl;
+	}
+	
+	if (rooms[user.getLocation()].getEastDoor() != -1)
+	{
+		  cout << "There is a door on the east side in which you can move through." << endl;
+	}
+
+	cout << endl;
+	cout << "There is currently a " << user.getItemName() << " in your inventory." << endl;
+	cout << endl;
+	cout << "There is a " << rooms[user.getLocation()].getItemName(0) << " and a " << rooms[user.getLocation()].getItemName(1) << " which you could grab." << endl;
+	cout << "******************************************************************" << endl;
+	
+}
+
+// Function for doing all sorts of fun stuff when you finish (displaying stats, writing to a certificate, etc)*******
+
+/*
+* Algorithm: occur when the user has found the exit, print out various lines, write out to a file, and exit the program
+* Steps: 
+	1. Print a congratulations
+	2. Print out many moves the user took
+	3. Give the user a rating based upon how many moves they took
+	4. Direct them to the certificate file found in the directory
+	5. Open an ofstream to the designated certificate file 
+	6. Write to the file the designted lines
+	7. Wait for them to enter '1', and then exit the game 
+* Input parameters: The user object, the counter from the main function 
+* Output (prints to screen): The above statements 
+* Returns: Nothing 
+*/
+
+void exitFunction(User &user, int &counter)
+{
+	cout << "******************************************************************" << endl;
+	int choice;
+	ofstream fileTool;
+	char rating;
+	cout << "Congratulations! You have found the exit, and the key you have can open the door!" << endl;
+	// 1. Print a congratulations
+	cout << "You completed the game in: " << counter << " moves. ";
+	// 2. Print out many moves the user took
+	if (counter < 10)
+	// 3. Give the user a rating based upon how many moves they took
+	{
+		cout << "Not bad for a beginner!" << endl;
+		rating = 'A';
+	}
+
+	else if (counter < 20)
+	{
+		cout << "Not bad, however you could do better..." << endl;
+		rating = 'B';
+	}
+
+	else
+	{
+		cout << "Surely you can do better." << endl;
+		rating = 'C';
+	}
+	
+	
+	// 4. Direct them to the certificate file found in the directory
+	cout << "After exiting the game, if you take a look in this directory, there is a txt file labeled 'Certificate.txt'." << endl;
+	cout << "In which you will find a certificate of completion of the game Rooms!" << endl;
+	cout << "Thanks for playing, " << user.getName() << "!" << endl;
+	cout << "When finished reading this message, press 1 to exit the game. Good job!" << endl;
+	cin >> choice;
+
+	fileTool.open("certificate.txt");
+	// 5. Open an ofstream to the designated certificate file
+	fileTool << "======================= Cerificate of Completion: =======================" << endl;
+	// 6. Write to the file the designated lines 
+	fileTool << "This hereby certifies that " << user.getName() << " completed Rooms!" << endl;
+	fileTool << "They completed this game in " << counter << " moves, earning them a " << rating << " rating!" << endl;
+	fileTool << "Thanks for playing!" << endl;
+	cout << "******************************************************************" << endl;
+
+	while (choice != 1)
+	// 7. Wait for them to enter '1', and then exit the game 
+	{
+		cout << "Take all the time you need to read the above message." << endl;
+		cin >> choice;
+	}
+
+	exit(0);
+	
+}
+
+// Function for moving around the house *****************************************************************************
+
+/*
+* Algorithm: allow for the user to move from room to room should that room exist 
+* Steps: 
+	1. Print a menu that asks the user which direction to move
+	2. Enter a while loop that has user re-input their choice should it not be one of the provided
+	3. If choice aligns with that of the menu, enter if statement:
+	   - If the designated door doesn't exist, print "that's a wall, you can't go there"
+	   - Else if the door is the exit door, go to the exit function 
+	   - Else, change the user's location to the room that is in the designated direction
+* Input parameters: The user object, the room arrays, and the door arays the counter from the main function 
+* Output (prints to screen): The above statements 
+* Returns: Nothing 
+*/
+
+void moveAround(User &user, Room rooms[], Door doors[], int &counter)
+{
+	cout << "******************************************************************" << endl;
+	int choice;
+	counter++;
+	cout << "Which direction would you like to go? " << endl;
+	// 1. Print a menu that asks the user which direction to move
+	cout << "1. North" << endl;
+	cout << "2. South" << endl;
+	cout << "3. West" << endl;
+	cout << "4. East" << endl;
+	cin >> choice;
+	
+	while (choice < 1 || choice > 4)
+	// 2. Enter a while loop that has user re-input their choice should it not be one of the provided
+	{
+		cout << "Invalid option. Please choose one of the provided options." << endl;
+		cin >> choice;
+	}
+
+     /* 3. If choice aligns with that of the menu, enter if statement:
+	   - If the designated door doesn't exist, print "that's a wall, you can't go there"
+	   - Else if the door is the exit door, go to the exit function 
+           - Else, change the user's location to the room that is in the designated direction
+     */ 
+	if (choice == 1)
+	{
+		if (rooms[user.getLocation()].getNorthDoor() == -1)  
+		{
+			cout << endl;
+			cout << "That's a wall, you can't go there." << endl;
+		}
+		
+		else if (rooms[user.getLocation()].getNorthDoor() == -2)
+		{
+			if (user.getIfItemIsNeeded() == 0)
+			{
+				cout << "Unfortunately, the item you have is not the item needed to exit the house. Please go grab another item." << endl;
+			}
+
+			else
+			{
+				exitFunction(user, counter);
+			}
+		}
+
+		else
+		{
+			cout << endl;
+			cout << "Moving from room: " << user.getLocation() << endl;;
+			user.setLocation(doors[rooms[user.getLocation()].getNorthDoor()].getNorthRoom());
+			rooms[user.getLocation()].setIfVisited(true);
+			cout << "Moved to room: " << user.getLocation() << endl;
+		}
+	}
+	
+	else if (choice == 2)
+	{
+		if (rooms[user.getLocation()].getSouthDoor() == -1)  
+		{
+			cout << endl;
+			cout << "That's a wall, you can't go there." << endl;
+		}
+
+		else
+		{
+			cout << endl;
+			cout << "Moving from room: " << user.getLocation() << endl;
+			user.setLocation(doors[rooms[user.getLocation()].getSouthDoor()].getSouthRoom());
+			rooms[user.getLocation()].setIfVisited(true);
+			cout << "Moved to room: " << user.getLocation()<< endl;
+		}
+	}
+	
+	else if (choice == 3)
+	{
+		if (rooms[user.getLocation()].getWestDoor() == -1)  
+		{
+			cout << endl;
+			cout << "That's a wall, you can't go there." << endl;
+		}
+
+		else
+		{
+			cout << endl;
+			cout << "Moving from room: " << user.getLocation() << endl;
+			user.setLocation(doors[rooms[user.getLocation()].getWestDoor()].getWestRoom());
+			rooms[user.getLocation()].setIfVisited(true);
+			cout << "Moved to room: " << user.getLocation() << endl;
+		}
+	}
+	
+	else
+	{
+		if (rooms[user.getLocation()].getEastDoor() == -1)  
+		{
+			cout << endl;
+			cout << "That's a wall, you can't go there." << endl;
+		}
+
+
+		else
+		{
+			cout << endl;
+			cout << "Moving from room: " << user.getLocation() << endl;
+			user.setLocation(doors[rooms[user.getLocation()].getEastDoor()].getEastRoom());
+			rooms[user.getLocation()].setIfVisited(true);
+			cout << "Moved to room: " << user.getLocation() << endl;
+		}
+	}
+	cout << "******************************************************************" << endl;
+}
+
+// Function to build the name of the txt file used **************************************************************
+
+/*
+* Algorithm: creates a string used for the file name 
+* Steps: 
+	1. Set input identity from the 'place items' section of the main function to a string
+	2. Build a string by adding that identity to the phrase '.txt'
+	3. Return the filename string
+* Input parameters: int identity  
+* Output (prints to screen): Nothing 
+* Returns: the filename 
+*/
+
+string buildName(int identity)
+{
+	string identityString = to_string(identity);
+	// 1. Set input identity from the 'place items' section of the main function to a string
+	string fileName = identityString + ".txt";
+	// 2. Build a string by adding that identity to the phrase '.txt'
+	return fileName;
+	// 3. Return the filename string
+}
+
+// Function used to exchange the item in the room ***************************************************************
+
+/*
+* Algorithm: swap the user's item with one of the room's items that the user is currently in 
+* Steps: 
+	1. Display the two choices of items
+	2. Ask which item they would like to swap, give them two options in terms of integers 1 & 2
+	3. If the input option is not equal to 1 or 2, prompt the user to enter one of the provided options
+	4. Else if input option equals 1 or 2:
+	   - Create a temp item object  
+	   - Set id, name and if it is needed to the item in the room with the corresponding id (0 if the  
+             option is 1, 1 if the option is 2)
+	   - Create another temp object that sets equal all the user's item attributes to that of the temp item's
+	   - Set the user's item values equal to that of the first temp item, and the room's to the second
+	5. Print out the items' names that were swapped 
+* Input parameters: the user object, the array of rooms object   
+* Output (prints to screen): Various lines when called 
+* Returns: Nothing
+*/
+
+void exchangeItem(User &user, Room rooms[])
+{
+	cout << "******************************************************************" << endl;
+	int choice;
+	
+	// 1. Display the two choices of items:
+	cout << "Your choices of items in this room are: " << endl;
+	cout << "1. " << rooms[user.getLocation()].getItemName(0) << endl;
+	cout << "2. " << rooms[user.getLocation()].getItemName(1) << endl;
+	cout << endl;
+
+	// 2. Ask which item they would like to swap, give them two options in terms of integers 1 & 2:
+	cout << "Which item would you like to swap? " << endl;
+	cout << "If item 1, enter '1'" << endl;
+	cout << "If item 2, enter '2'" << endl;
+	cout << "If neither seem appealing, enter '3' to return to the main menu" << endl;
+	cin >> choice;
+
+	while (choice < 1 || choice > 3)
+	// 3. If the input option is not equal to 1 or 2, prompt the user to enter one of the provided options
+	{
+		cout << "Invalid choice. Please enter one of the provided options." << endl;
+		cin >> choice;
+	}
+
+	// 4. Else if input option equals 1 or 2:
+	if (choice == 1)
+	{
+		Item tempItem1;
+	   	// - Create a temp item object  
+		tempItem1.setItemID(rooms[user.getLocation()].getItemID(0));
+		tempItem1.setNameOfItem(rooms[user.getLocation()].getItemName(0));
+		tempItem1.setIfItemIsNeeded(rooms[user.getLocation()].getIfItemIsNeeded(0));
+	   	// - Set id, name and if it is needed to the item in the room with the corresponding id (0 if the  
+           	//   option is 1, 1 if the option is 2)
+	
+		Item tempItem2;	
+	   	// - Create another temp object that sets equal all the user's item attributes to that of the temp item's
+		tempItem2.setItemID(user.getItemID());
+		tempItem2.setNameOfItem(user.getItemName());
+		tempItem2.setIfItemIsNeeded(user.getIfItemIsNeeded());
+
+	   	// - Set the user's item values equal to that of the first temp item, and the room's to the second:
+		user.setItem(tempItem1);
+		rooms[user.getLocation()].setItemAt(0, tempItem2);
+		
+		cout << endl;
+		cout << "You have swapped your " << rooms[user.getLocation()].getItemName(0) << " for a " << user.getItemName() << endl;
+		// 5. Print out the items' names that were swapped 
+	}
+
+	else if (choice == 2)
+	{
+		
+		Item tempItem1;
+		tempItem1.setItemID(rooms[user.getLocation()].getItemID(1));
+		tempItem1.setNameOfItem(rooms[user.getLocation()].getItemName(1));
+		tempItem1.setIfItemIsNeeded(rooms[user.getLocation()].getIfItemIsNeeded(1));
+
+		Item tempItem2;	
+		tempItem2.setItemID(user.getItemID());
+		tempItem2.setNameOfItem(user.getItemName());
+		tempItem2.setIfItemIsNeeded(user.getIfItemIsNeeded());
+
+		user.setItem(tempItem1);
+		rooms[user.getLocation()].setItemAt(1, tempItem2);
+		
+		cout << endl;
+		cout << "You have swapped your " << rooms[user.getLocation()].getItemName(1) << " for a " << user.getItemName() << endl;
+	}
+
+	else 
+	{
+		cout << "Returning to main menu" << endl;
+		cout << endl;
+	}
+	cout << "******************************************************************" << endl;
+}
+
+// Function used to split the text file *********************************************************************
+
+int split(string lineSequence, char delimitor, string splitArray[], int length)
+{
+  
+        string temp; 
+        // Establish a temporary variable used to transfer array values later 
+        // in the fuction
+        int lengthwords = 0; 
+     
+        if(lineSequence == "")
+        // If the line doesn't exist, return 0
+        {
+            return 0;
+        } 
+      
+        else
+        {
+       
+        lineSequence = lineSequence + delimitor;
+        // Ensure the sequence includes the delimitor as to prevent unwanted
+        // values being populated
+     
+        for(int count = 0; count < lineSequence.length(); count++)
+        // Enter for loop 
+        {
+           
+            if(lineSequence[count] != delimitor)
+            // If the character in the string at that certain point isn't 
+            // the delimitor, set the temporary variable equal to the temp character
+            // plus the new character
+            {
+                temp = temp + lineSequence[count];
+            }
+          
+            else 
+            // Else, create an entry in the array that equals the temp variable
+            {
+                if(temp.length()!=0)
+                {
+                    splitArray[lengthwords] = temp;  
+                    lengthwords++; 
+                }
+                temp = ""; 
+                // Clear the temp variable
+            }
+    
+        }  
+            if(lengthwords > length)
+            // Ensure the number of times the loop was executed wasn't larger than the 
+            // length of the array
+            {
+                return -1;
+            }
+        }
+        return lengthwords;
+        // Return the counter variable (lengthWords)
+}
+
+// Function for teleporting user to a random room********************************************************************
+
+/*
+* Algorithm: Move the user to a random room 
+* Steps: 
+	1. Create a random integer between 0 and the amount of rooms - 1
+	2. Incriment the move counter from the main function (passed in by reference) by 1
+	3. Set the user's location to that randomly generated integer
+* Input parameters: The user object, the array of rooms object, the move counter   
+* Output (prints to screen): The room the user was moved to  
+* Returns: Nothing
+*/
+
+void teleportUser(User &user, Room rooms[], int &counter)
+{
+	cout << "******************************************************************" << endl;
+	int randomRoom = (rand()%(X_ROOMS*Y_ROOMS));
+	// 1. Create a random integer between 0 and the amount of rooms - 1
+	counter++;
+	// 2. Incriment the move counter from the main function (passed in by reference) by 1
+	user.setLocation(randomRoom);
+	// 3. Set the user's location to that randomly generated integer
+	cout << "You are now in room: " << user.getLocation() << endl;
+	cout << "******************************************************************" << endl;
+}
+
+// Function used for the random choice option ***********************************************************************
+
+
+/*
+* Algorithm: offer the user 3 chances to escpae the house all together  
+* Steps: 
+	1. Create a random number for which the 
+* Input parameters: The user object, the array of rooms object, the move counter   
+* Output (prints to screen): The room the user was moved to  
+* Returns: Nothing
+*/
+
+void randomChoice(User &user, Room rooms[], Door doors[], int &counter, int &counter2)
+{
+	cout << "******************************************************************" << endl;
+	int choice;
+	int choice2;	
+	int randomChoice = (rand()%10 + 1);
+	if (counter < 1)
+	{
+		cout << endl;
+		cout << "Unfortunately, you have used up all your attempts." << endl;	
+		cout << endl;
+	}
+
+	else 
+	{
+		cout << "Are you sure you'd like to try your luck? You only have " << counter << " attempts left." << endl;
+		cout << randomChoice << endl;
+		cout << "1. Yes." << endl;
+		cout << "2. No." << endl;
+		cin >> choice;
+		
+		while (choice < 1 || choice > 2)
+		{
+			cout << "Invalid choice. Please enter one of the provided options." << endl;
+			cin >> choice;
+		}
+		
+		if (choice == 1)
+		{
+			cout << endl;
+			cout << "Please enter a guess (1-10) for what the random number might be: " << endl;
+			cin >> choice2;
+		
+			while (choice2 < 1 || choice2 > 10)
+			{
+				cout << "Invalid choice. Please enter one of the provided options." << endl;
+				cin >> choice2;
+			}
+		
+			if (choice2 == randomChoice)
+			{
+				exitFunction(user, counter2);
+			}
+
+			else
+			{
+				cout << "Unfortunately, you did not get it. You still have " << counter - 1 << " attempts." << endl;
+				counter--;
+			}
+					
+		}
+	}
+	cout << "******************************************************************" << endl;
+}   
+
+// Function for displaying a menu of what to do and calling to proper funcitons based on choice *********************
+
+void decisionFunction(User &user, Room rooms[], Door doors[], Item &item, int &counterForOption5, int &counterForOption2)
+{
+	int choice = 0;
+	cout << "Current statistics: " << endl;
+	cout << "You are currently in room " << user.getLocation() << "." << endl;
+	
+	if (counterForOption2 != 1)
+	{
+		cout << "You have moved " << counterForOption2 << " times." << endl;
+	}
+
+	else 
+	{
+		
+		cout << "You have moved " << counterForOption2 << " time." << endl;
+	}
+	cout << "You're currently holding a " << user.getItemName() << "." << endl;
+
+	cout << endl;
+	cout << "What would you like to do, " << user.getName() << "?" << endl;
+	cout << "1. Look around the room." << endl; 
+	cout << "2. Move to a different room." << endl; 
+	cout << "3. Exchange item." << endl; 
+	cout << "4. Teleport to a random room." << endl;
+	if (counterForOption5 == 0)
+	{
+	
+	}
+	else if (counterForOption5 == 1)
+	{
+		cout << "5. Guess a number 1-10 which, if guessed correctly, can bail you out of the house (only have " << counterForOption5 << " attempt!)" << endl;
+	}
+	else 
+	{
+		cout << "5. Guess a number 1-10 which, if guessed correctly, can bail you out of the house (only have " << counterForOption5 << " attempts!)" << endl;
+	}	
+	cout << "6. Quit." << endl;
+	cin >> choice;
+	
+	while (choice < 1 || choice > 6) 
+	{
+		cout << "Invalid choice. Please enter one of the provided options." << endl;
+		cin >> choice;
+	}
+
+	if (choice == 1)
+	{
+		cout << endl;
+		lookAround(user, rooms, doors);
+		cout << endl;
+	}
+
+	else if (choice == 2)
+	{
+		cout << endl;
+		moveAround(user, rooms, doors, counterForOption2);
+		cout << endl;
+	}
+
+	else if (choice == 3)
+	{
+		cout << endl;
+		exchangeItem(user, rooms);
+		cout << endl;
+	}
+
+	else if (choice == 4)
+	{
+		cout << endl;
+		teleportUser(user, rooms, counterForOption2);
+		cout << endl;
+	}
+	else if (choice == 5)
+	{
+		cout << endl;
+		randomChoice(user, rooms, doors, counterForOption5, counterForOption2);
+		cout << endl;
+	}
+	else
+	{
+		cout << endl;
+		cout << "Sorry to see you go! Hope to see you again soon! " << endl;
+		cout << endl;
+		exit(0);
+	}
+}
+
+// Main function: creates map, assigns items to rooms, holds loop for game to continue to excecute *****
+
+int main()
+{
+
+        srand( time(NULL) );
+        ifstream fileTool;
+	
+	Room rooms[TOTAL_ROOMS];
+	Door doors[MAX_DOORS];
+
+	int currentRoom = 0;
+	int currentDoor = 0;
+	for (int y = 0; y < Y_ROOMS; y++)
+	{
+		for(int x = 0; x < X_ROOMS; x++)
+		{
+			rooms[currentRoom].setXLocation(x);
+			rooms[currentRoom].setYLocation(y);
+	
+			if (x < X_ROOMS - 1)
+			{
+				doors[currentDoor].setOrientation(EW);
+				doors[currentDoor].setWestRoom(currentRoom);
+				doors[currentDoor].setEastRoom(currentRoom + 1);
+				rooms[currentRoom].setEastDoor(currentDoor);
+				rooms[currentRoom + 1].setWestDoor(currentDoor);
+				currentDoor++;
+			} 
+
+			else 
+			{
+			        rooms[currentRoom].setEastDoor(-1);
+                        }
+                        
+			if ( x == 0 ) 
+			{
+			        rooms[currentRoom].setWestDoor(-1);
+                        }
+			
+			if (y < Y_ROOMS - 1)
+			{
+				doors[currentDoor].setOrientation(NS);
+				doors[currentDoor].setNorthRoom(currentRoom + X_ROOMS);
+				doors[currentDoor].setSouthRoom(currentRoom);
+				rooms[currentRoom].setNorthDoor(currentDoor);
+				rooms[currentRoom+ X_ROOMS].setSouthDoor(currentDoor);
+				currentDoor++;
+			} 
+			
+			else 
+			{
+			        rooms[currentRoom].setNorthDoor(-1);
+                        }
+                        
+			if ( y == 0 ) 
+			{
+				rooms[currentRoom].setSouthDoor(-1);
+                        }
+			
+			
+			if (rooms[currentRoom].getXLocation() == (X_ROOMS-2) && rooms[currentRoom].getYLocation() == (Y_ROOMS-1))
+			{
+				rooms[currentRoom].setNorthDoor(-2);
+			}
+			
+			currentRoom++;
+		} 
+	}
+	
+// Next segment of main (assigns items to rooms ******************************************************************** 
+
+    	for (int i = 0; i < (X_ROOMS * Y_ROOMS); i++)
+	{
+	        string fileName = buildName(i);
+		fileTool.open(fileName);
+       
+        	if (fileTool.is_open())
+        	{
+            		string line = ""; 
+            		int counter = 0;
+            		while (getline(fileTool, line))
+            		{
+                                string tmp[3];
+	        		for (int i = 0; i < 3; i++)
+                		{		
+                    			tmp[i] = " ";
+                		}
+                  
+                		split(line, ',', tmp, 3);
+
+                		int itemID = stoi(tmp[0]);
+                		string itemName = tmp[1];
+                		int itemNeeded = stoi(tmp[2]);
+
+                		Item temp;
+                		// Split the line using the split function by commas
+                		temp.setItemID(itemID);
+                		// Set the first entry in the array equal to the author
+              	  		temp.setNameOfItem(itemName);
+                		// Set the second entry in the array equal to the title
+              	  		temp.setIfItemIsNeeded(itemNeeded);
+                		// Set the second entry in the array equal to the title
+                		rooms[i].setItemAt(counter, temp);
+                		// Store the index of the book array equal to the temp 
+	               		// object 
+                		counter++;
+                		// Incriment the number of books now stored in the 
+               			// arrays by 1
+            		}
+                }
+        	
+		else 
+               	{
+            		cout << "The file didn't open correctly" << endl;
+        	}
+	fileTool.close();
+	}
+
+// Main game loop, as well as prints out pre-game instructions ***************************************
+
+	User user;
+	string name;
+	int option;
+	int option2;
+	int counterForLuckFunction = 3;
+	int counterForMoveAroundFunction = 0;
+	
+	Item item;
+	item.setItemID(-1);
+	item.setNameOfItem("phone");
+	item.setIfItemIsNeeded(0);
+	
+	cout << "Welcome to Rooms!" << endl;
+	cout << "This game has one simple objective: get out." << endl;
+	cout << "In this game, you're stuck in a house which contains " << (X_ROOMS * Y_ROOMS) << " rooms, of which you have to navigate to eventually find the exit." << endl;
+	cout << "One of the bordered rooms will have an exit attached, which you can use to leave the house and complete the game." << endl;
+	cout << "There are two items placed in each room, making a total of " << 2*(X_ROOMS * Y_ROOMS) << " items, one of which is required to exit the house. It's up to you to find which one is needed to exit." << endl;
+	cout << "So, in short, in order to exit the house, you must aquire the correct object, and then proceed to find the exit attached to the outside of one of the bordering rooms." << endl; 
+	cout << "You begin with a phone in your inventory, which you can trade for any of the items found in the rooms." << endl;
+	cout << endl;
+	cout << "Please press 1 when you have read and understood these instructions: " << endl;
+	cin >> option2;
+	
+	while (option2 != 1)
+	{
+		cout << "Take all the time you need for the instructions. Enter 1 when you're ready." << endl;
+		cin >> option2;
+	}
+	
+	cout << endl;
+	cout << "Please enter your name to begin the game: " << endl;
+	cin.get();
+	getline(cin, name);	
+	cout << "Best of luck to you " << name << "!" << endl;
+	cout << endl;
+	
+	user.setName(name);
+	user.setLocation(0);
+	user.setItem(item);
+	
+	while (1 > 0)
+	{
+		decisionFunction(user, rooms, doors, item, counterForLuckFunction, counterForMoveAroundFunction);
+	}
+	
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

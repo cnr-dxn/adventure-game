@@ -1,0 +1,62 @@
+head	1.1;
+access;
+symbols;
+locks
+	cdixon1:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	2020.01.25.20.44.17;	author cdixon1;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#ifndef USER_H
+#define USER_H
+
+#include "Item.h"  
+#include "Room.h"  
+#include <iostream>
+#include <iomanip>
+#include <math.h>
+#include <vector> 
+#include <string>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+class User 
+{
+	public:
+	User();
+	User(string, int);
+	
+	void setName(string);
+	void setLocation(int);
+	void setItem(Item);
+
+	string getName();
+	int getLocation();
+	int getItemID();
+        string getItemName();
+        int getIfItemIsNeeded();	
+
+	private:
+	Item item;
+	string name;
+	int location;
+};
+
+#endif
+@
